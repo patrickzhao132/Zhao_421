@@ -1,29 +1,34 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
+const itemsRouter = require('./routes/items');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect("mongodb://127.0.0.1:27017/mydatabase");
-mongoose.connection.on("connected", () => console.log("Connected to MongoDB"));
-mongoose.connection.on("error", (err) => console.error("MongoDB connection error:", err));
-
 mongoose
   .connect("mongodb://127.0.0.1:27017/mydatabase")
-  .catch((err) => console.error("Mongoose connect() failed:", err));
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
 // Routes
-const itemsRouter = require('./routes/items');
 app.use('/items', itemsRouter);
 
 // Start the server
 app.get("/", (req, res) => {
   res.send("API is running");
 });
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get("/api-docs.json", (req, res) => res.json(swaggerSpec));
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
