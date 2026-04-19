@@ -11,7 +11,7 @@ const options = {
       version: "1.0.0",
       description: "Items API documented with Swagger (OpenAPI)",
     },
-    servers: [{ url: `http://localhost:${PORT}` }],
+    servers: [{ url: `https://${process.env.RENDER_EXTERNAL_URL}`}],
   },
   apis: [path.join(__dirname, "routes", "*.js")],
 };
