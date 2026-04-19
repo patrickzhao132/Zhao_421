@@ -8,13 +8,13 @@ const itemsRouter = require('./routes/items');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URL = process.env.MONGO_URI;
 
 // Middleware
 app.use(express.json());
 
 // MongoDB Connection
-mongoose
-  .connect("mongodb://127.0.0.1:27017/mydatabase")
+mongoose.connect(MONGO_URL)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
